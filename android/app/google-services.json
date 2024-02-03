@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "123435302339",
+    "project_id": "kitajom-fabdd",
+    "storage_bucket": "kitajom-fabdd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123435302339:android:db02cbc06e7c1d70931176",
+        "android_client_info": {
+          "package_name": "com.example.kitajom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiFESgjmmhl5ZDcEDattWaHkfxHuqx12I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123435302339:android:d77af15c33ef3fb8931176",
+        "android_client_info": {
+          "package_name": "com.example.kitajomvendor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiFESgjmmhl5ZDcEDattWaHkfxHuqx12I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
