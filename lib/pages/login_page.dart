@@ -77,12 +77,12 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 20),
             //logo
             Center(
               child: Container(
-                width: 250,
-                height: 250,
+                width: 320,
+                height: 320,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),

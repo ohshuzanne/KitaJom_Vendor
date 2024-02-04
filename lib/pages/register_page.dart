@@ -87,8 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
             //logo
             Center(
               child: Container(
-                width: 250,
-                height: 250,
+                width: 350,
+                height: 350,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),

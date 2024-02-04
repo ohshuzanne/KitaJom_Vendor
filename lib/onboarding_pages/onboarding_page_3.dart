@@ -10,7 +10,7 @@ class OnboardingPage3 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 0),
             //onboarding image 1
             Center(
               child: Container(

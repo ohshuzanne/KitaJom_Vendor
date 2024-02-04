@@ -18,6 +18,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   PageController _controller = PageController();
 
   //keep track of page index
+  bool onSecondPage = false;
   bool onLastPage = false;
 
   @override
@@ -29,6 +30,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             controller: _controller,
             onPageChanged: (index) {
               setState(() {
+                onSecondPage = (index == 1);
                 onLastPage = (index == 2);
               });
             },
@@ -50,7 +52,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     //skip button
                     GestureDetector(
                       onTap: () {
-                        _controller.jumpToPage(2);
+                        _controller.animateToPage(2,
+                            duration: Duration(milliseconds: 800),
+                            curve: Curves.easeInToLinear);
                       },
                       child: const Text("Skip",
                           style: TextStyle(fontFamily: 'Lexend')),
@@ -109,34 +113,63 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 const SizedBox(height: 20),
 
                 //get started button
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return AuthPage();
+                onSecondPage
+                    ? GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return AuthPage();
+                              },
+                            ),
+                          );
                         },
+                        child: Container(
+                          width: 200,
+                          height: 50,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                          ),
+                          child: const Text(
+                            "Get Started",
+                            style: TextStyle(
+                              color: darkGreen,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return AuthPage();
+                              },
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 200,
+                          height: 50,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: darkGreen,
+                            borderRadius: BorderRadius.all(Radius.circular(25)),
+                          ),
+                          child: const Text(
+                            "Get Started",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    width: 200,
-                    height: 50,
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      color: darkGreen,
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                    ),
-                    child: const Text(
-                      "Get Started",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 40),
               ],
             ),
