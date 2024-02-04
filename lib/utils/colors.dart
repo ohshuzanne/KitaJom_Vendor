@@ -7,3 +7,5 @@ const lightYellow = Color(0xfffbe2ab);
 const violet = Color(0xff271d37);
 const orange = Color(0xfff07138);
 const yellowGrey = Color(0xffe9e1c0);
+const skyBlue = Color.fromARGB(255, 133, 161, 255);
+const milk = Color.fromARGB(255, 243, 234, 223);

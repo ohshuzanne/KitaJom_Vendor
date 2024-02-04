@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
-import 'package:kitajomvendor/components/squaretile.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

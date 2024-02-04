@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
-import 'package:kitajomvendor/components/squaretile.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -94,11 +93,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Image.asset('lib/images/16.png'),
+                child: Image.asset('lib/images/17.png'),
               ),
             ),
 
-            const SizedBox(height: 5),
+            const SizedBox(height: 20),
 
             //welcome back, you've been missed
 
