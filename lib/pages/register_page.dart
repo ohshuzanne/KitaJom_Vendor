@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kitajomvendor/components/pickimage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:kitajomvendor/components/add_data.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -25,6 +30,9 @@ class _RegisterPageState extends State<RegisterPage> {
   final addressController = TextEditingController();
   final businessNameController = TextEditingController();
   final registrationNumberController = TextEditingController();
+
+  //Uint8List for image
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -62,16 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
         );
 
         //add user details
-        addUserDetails(
-          emailController.text.trim(),
-          firstNameController.text.trim(),
-          lastNameController.text.trim(),
-          phoneNumberController.text.trim(),
-          usernameController.text.trim(),
-          addressController.text.trim(),
-          businessNameController.text.trim(),
-          registrationNumberController.text.trim(),
-        );
+        saveProfile();
         Navigator.pop(context);
       } else {
         Navigator.pop(context);
@@ -137,6 +136,38 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         );
       },
+    );
+  }
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(
+      () {
+        _image = img;
+      },
+    );
+  }
+
+  void saveProfile() async {
+    String email = emailController.text.trim();
+    String firstName = firstNameController.text.trim();
+    String lastName = lastNameController.text.trim();
+    String phoneNumber = phoneNumberController.text.trim();
+    String username = usernameController.text.trim();
+    String address = addressController.text.trim();
+    String businessName = businessNameController.text.trim();
+    String registrationNumber = registrationNumberController.text.trim();
+
+    String resp = await StoreData().saveData(
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: phoneNumber,
+      file: _image!,
+      username: username,
+      address: address,
+      businessName: businessName,
+      registrationNumber: registrationNumber,
     );
   }
 
@@ -269,11 +300,69 @@ class _RegisterPageState extends State<RegisterPage> {
 
             const SizedBox(height: 25),
 
-            //sign in button
+            const Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Divider(
+                      thickness: 0.5,
+                      color: darkGreen,
+                    ),
+                  ),
+                  //middle text
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                    ),
+                    child: Text(
+                      "Upload your photo",
+                      style: TextStyle(
+                        color: darkGreen,
+                        fontFamily: 'Lexend',
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
 
-            MyButton(
-              onTap: signUserUp,
-              buttonText: "Sign Up",
+                  Expanded(
+                    child: Divider(
+                      thickness: 0.5,
+                      color: darkGreen,
+                    ),
+                  )
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            //profile photo
+            Stack(
+              children: [
+                _image != null
+                    ? CircleAvatar(
+                        radius: 64,
+                        backgroundImage: MemoryImage(_image!),
+                      )
+                    : CircleAvatar(
+                        radius: 64,
+                        backgroundColor: milk,
+                        backgroundImage:
+                            AssetImage('lib/images/defaultprofile.png'),
+                      ),
+                Positioned(
+                  child: IconButton(
+                    onPressed: selectImage,
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                      color: darkGreen,
+                    ),
+                  ),
+                  bottom: -10,
+                  left: 90,
+                ),
+              ],
             ),
 
             const SizedBox(height: 25),
@@ -300,7 +389,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 25),
+
+            MyButton(
+              onTap: signUserUp,
+              buttonText: "Sign Up",
+            ),
           ]),
         ),
       ),
