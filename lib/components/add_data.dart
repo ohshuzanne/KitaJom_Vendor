@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
+import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
 
 final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -11,7 +12,8 @@ class StoreData {
     String childName,
     Uint8List file,
   ) async {
-    Reference ref = _storage.ref().child(childName);
+    // Construct the reference to the profilePic folder
+    Reference ref = _storage.ref().child('profilePic').child(childName);
     UploadTask uploadTask = ref.putData(file);
     TaskSnapshot snapshot = await uploadTask;
     String downloadUrl = await snapshot.ref.getDownloadURL();
@@ -31,7 +33,9 @@ class StoreData {
   }) async {
     String resp = "Some error has occurred";
     try {
-      String imageUrl = await uploadImageToStorage('profileImage', file);
+      String uniqueFilename =
+          '${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(10000)}.jpg';
+      String imageUrl = await uploadImageToStorage(uniqueFilename, file);
       DocumentReference userDoc = await _firestore.collection('user').add({
         'email': email,
         'firstName': firstName,

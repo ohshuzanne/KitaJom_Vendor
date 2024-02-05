@@ -83,36 +83,6 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  Future addUserDetails(
-    String email,
-    String firstName,
-    String lastName,
-    String phoneNumber,
-    String username,
-    String address,
-    String businessName,
-    String registrationNumber,
-  ) async {
-    try {
-      DocumentReference userDoc =
-          await FirebaseFirestore.instance.collection('user').add({
-        'email': email,
-        'firstName': firstName,
-        'lastName': lastName,
-        'phoneNumber': phoneNumber,
-        'role': 'vendor',
-        'username': username,
-      });
-      await userDoc.collection('vendor').add({
-        'address': address,
-        'businessName': businessName,
-        'registrationNumber': registrationNumber,
-      });
-    } catch (error) {
-      print("Error in adding user details: $error");
-    }
-  }
-
   //wrong credentials message
   void showErrorMessage(String message) {
     showDialog(

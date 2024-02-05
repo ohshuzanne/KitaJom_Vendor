@@ -17,6 +17,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: darkGreen,
+          iconTheme: IconThemeData(
+            color: lightYellow,
+          ),
           title: Text("HomePage",
               style: TextStyle(
                 fontFamily: 'Lexend',
