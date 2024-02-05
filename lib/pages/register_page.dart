@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
@@ -25,8 +26,23 @@ class _RegisterPageState extends State<RegisterPage> {
   final businessNameController = TextEditingController();
   final registrationNumberController = TextEditingController();
 
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneNumberController.dispose();
+    usernameController.dispose();
+    addressController.dispose();
+    businessNameController.dispose();
+    registrationNumberController.dispose();
+    super.dispose();
+  }
+
   //sign user in method
-  void signUserUp() async {
+  Future signUserUp() async {
     //show loading circle
     showDialog(
       context: context,
@@ -37,12 +53,24 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
 
-    //try creating the user
+    //try creating the user //authentication
     try {
       if (passwordController.text == confirmPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
+        );
+
+        //add user details
+        addUserDetails(
+          emailController.text.trim(),
+          firstNameController.text.trim(),
+          lastNameController.text.trim(),
+          phoneNumberController.text.trim(),
+          usernameController.text.trim(),
+          addressController.text.trim(),
+          businessNameController.text.trim(),
+          registrationNumberController.text.trim(),
         );
         Navigator.pop(context);
       } else {
@@ -53,6 +81,36 @@ class _RegisterPageState extends State<RegisterPage> {
       //pop the loading circle
       Navigator.pop(context);
       showErrorMessage(e.code);
+    }
+  }
+
+  Future addUserDetails(
+    String email,
+    String firstName,
+    String lastName,
+    String phoneNumber,
+    String username,
+    String address,
+    String businessName,
+    String registrationNumber,
+  ) async {
+    try {
+      DocumentReference userDoc =
+          await FirebaseFirestore.instance.collection('user').add({
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'phoneNumber': phoneNumber,
+        'role': 'vendor',
+        'username': username,
+      });
+      await userDoc.collection('vendor').add({
+        'address': address,
+        'businessName': businessName,
+        'registrationNumber': registrationNumber,
+      });
+    } catch (error) {
+      print("Error in adding user details: $error");
     }
   }
 
