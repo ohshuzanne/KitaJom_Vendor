@@ -3,6 +3,7 @@ import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kitajomvendor/pages/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
@@ -127,11 +128,23 @@ class _LoginPageState extends State<LoginPage> {
 
             //forgot password?
 
-            Text(
-              "Forgot password?",
-              style: TextStyle(
-                color: Colors.grey[500],
-                fontSize: 12,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ForgotPasswordPage();
+                    },
+                  ),
+                );
+              },
+              child: Text(
+                "Forgot password?",
+                style: TextStyle(
+                  color: Colors.grey[500],
+                  fontSize: 12,
+                ),
               ),
             ),
 

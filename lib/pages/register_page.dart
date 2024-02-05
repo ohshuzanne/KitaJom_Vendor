@@ -17,6 +17,13 @@ class _RegisterPageState extends State<RegisterPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final usernameController = TextEditingController();
+  final addressController = TextEditingController();
+  final businessNameController = TextEditingController();
+  final registrationNumberController = TextEditingController();
 
   //sign user in method
   void signUserUp() async {
@@ -139,6 +146,70 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
 
             const SizedBox(height: 20),
+
+            //username TextField
+            MyTextField(
+              controller: usernameController,
+              hintText: "Username",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
+
+            //firstName TextField
+            MyTextField(
+              controller: firstNameController,
+              hintText: "First Name",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
+
+            //lastName TextField
+            MyTextField(
+              controller: lastNameController,
+              hintText: "Last Name",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
+
+            //phone TextField
+            MyTextField(
+              controller: phoneNumberController,
+              hintText: "Phone Number",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
+
+            //ADDRESS TextField
+            //CHANGE THIS
+            MyTextField(
+              controller: addressController,
+              hintText: "Address",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
+
+            //Business Name
+            MyTextField(
+              controller: businessNameController,
+              hintText: "Business Name",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
+
+            //registration number
+            MyTextField(
+              controller: registrationNumberController,
+              hintText: "Registration Number",
+              obscureText: false,
+            ),
+
+            const SizedBox(height: 25),
 
             //sign in button
 

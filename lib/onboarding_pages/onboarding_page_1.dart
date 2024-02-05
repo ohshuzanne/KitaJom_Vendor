@@ -60,7 +60,7 @@ class OnboardingPage1 extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                          "Put your platform out there, and\nlet us do the promoting for you.\nReaching your target audience\nhas never been this easy.",
+                          "Put your platform out there, and\nlet us do the promoting for you.\nReaching your target audience has\nnever been this easy.",
                           style: TextStyle(
                             fontFamily: 'Lexend',
                             fontSize: 16,

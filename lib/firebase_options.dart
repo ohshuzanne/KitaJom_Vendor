@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAiFESgjmmhl5ZDcEDattWaHkfxHuqx12I',
-    appId: '1:123435302339:android:d77af15c33ef3fb8931176',
-    messagingSenderId: '123435302339',
-    projectId: 'kitajom-fabdd',
-    storageBucket: 'kitajom-fabdd.appspot.com',
+    apiKey: 'AIzaSyC50PYrp-1seZPOEBcPisYPmDNNsM7YbKk',
+    appId: '1:1064917493526:android:ddad373b61cecb24929237',
+    messagingSenderId: '1064917493526',
+    projectId: 'kitajomdemo',
+    storageBucket: 'kitajomdemo.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAVDFWOYXNYnoeruHFnbAlei3VlcNgZ_Ow',
-    appId: '1:123435302339:ios:b260f3c6f621253e931176',
-    messagingSenderId: '123435302339',
-    projectId: 'kitajom-fabdd',
-    storageBucket: 'kitajom-fabdd.appspot.com',
+    apiKey: 'AIzaSyCMQIMvE4t7B6UcoJaBJmkFmNcQNCUt6jE',
+    appId: '1:1064917493526:ios:3689818685f8885f929237',
+    messagingSenderId: '1064917493526',
+    projectId: 'kitajomdemo',
+    storageBucket: 'kitajomdemo.appspot.com',
     iosBundleId: 'com.example.kitajomvendor',
   );
 }
