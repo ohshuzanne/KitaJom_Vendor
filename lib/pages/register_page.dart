@@ -49,9 +49,9 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  //sign user in method
-  Future signUserUp() async {
-    //show loading circle
+  //sign user up method
+  Future<void> signUserUp() async {
+    // Show loading circle
     showDialog(
       context: context,
       builder: (context) {
@@ -61,23 +61,29 @@ class _RegisterPageState extends State<RegisterPage> {
       },
     );
 
-    //try creating the user //authentication
     try {
       if (passwordController.text == confirmPasswordController.text) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        // Create user with Firebase Authentication
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
 
-        //add user details
-        saveProfile();
+        // Get the UID from the UserCredential
+        String uid = userCredential.user!.uid;
+
+        // Add user details
+        saveProfile(uid);
+
+        // Close loading circle
         Navigator.pop(context);
       } else {
         Navigator.pop(context);
         showErrorMessage("Passwords do not match");
       }
     } on FirebaseAuthException catch (e) {
-      //pop the loading circle
+      // Close loading circle
       Navigator.pop(context);
       showErrorMessage(e.code);
     }
@@ -85,28 +91,31 @@ class _RegisterPageState extends State<RegisterPage> {
 
   //wrong credentials message
   void showErrorMessage(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: darkGreen,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          title: Center(
-            child: Text(
-              message,
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w300,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
+    if (mounted) {
+      // Check if the widget is still mounted
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: darkGreen,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
             ),
-          ),
-        );
-      },
-    );
+            title: Center(
+              child: Text(
+                message,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 
   void selectImage() async {
@@ -118,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void saveProfile() async {
+  void saveProfile(String uid) async {
     String email = emailController.text.trim();
     String firstName = firstNameController.text.trim();
     String lastName = lastNameController.text.trim();
@@ -129,6 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
     String registrationNumber = registrationNumberController.text.trim();
 
     String resp = await StoreData().saveData(
+      uid: uid, // Pass the UID to the saveData method
       email: email,
       firstName: firstName,
       lastName: lastName,

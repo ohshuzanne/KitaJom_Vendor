@@ -21,6 +21,7 @@ class StoreData {
   }
 
   Future<String> saveData({
+    required String uid,
     required String email,
     required String firstName,
     required String lastName,
@@ -36,7 +37,12 @@ class StoreData {
       String uniqueFilename =
           '${DateTime.now().millisecondsSinceEpoch}_${Random().nextInt(10000)}.jpg';
       String imageUrl = await uploadImageToStorage(uniqueFilename, file);
-      DocumentReference userDoc = await _firestore.collection('user').add({
+
+      // Reference to the user document
+      DocumentReference userDoc = _firestore.collection('user').doc(uid);
+
+      // Set user data
+      await userDoc.set({
         'email': email,
         'firstName': firstName,
         'lastName': lastName,
@@ -45,11 +51,14 @@ class StoreData {
         'role': 'vendor',
         'username': username,
       });
+
+      // Add vendor details
       await userDoc.collection('vendor').add({
         'address': address,
         'businessName': businessName,
         'registrationNumber': registrationNumber,
       });
+
       resp = 'Success';
     } catch (err) {
       resp = err.toString();
