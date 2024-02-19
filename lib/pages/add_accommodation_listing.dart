@@ -377,7 +377,7 @@ class _AccommodationListingFieldsState
           hintText: "eg. Jalan Puchong Prima",
         ),
 
-//description
+        //description
         const Padding(
           padding: EdgeInsets.fromLTRB(
             35,
@@ -403,6 +403,347 @@ class _AccommodationListingFieldsState
           controller: _descriptionController,
           hintText: "A very comfortable stay with 6 rooms and...",
         ),
+
+        //roomType
+        const Padding(
+          padding: EdgeInsets.fromLTRB(
+            35,
+            10,
+            35,
+            6,
+          ),
+          child: Row(
+            children: [
+              Text(
+                "Room Types Available",
+                style: TextStyle(
+                  color: darkGreen,
+                  fontSize: 16,
+                  fontFamily: 'Lexend',
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        //roomtype as chips
+        // Display list of roomtypes categories as chips
+        Wrap(
+          children: List.generate(savedRoomTypes.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Chip(
+                  label: Text(
+                    savedRoomTypes[index].name,
+                    style: TextStyle(
+                      color: darkGreen,
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                  deleteIcon: Icon(Icons.close),
+                  deleteIconColor: darkGreen,
+                  onDeleted: () {
+                    setState(() {
+                      savedRoomTypes.removeAt(index);
+                    });
+                  },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    side: BorderSide(color: darkGreen),
+                  )),
+            );
+          }),
+        ),
+
+        // List of text fields for roomtype
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            35,
+            10,
+            35,
+            0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(roomTypes.length, (index) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  TextField(
+                    controller:
+                        TextEditingController(text: roomTypes[index].name),
+                    onChanged: (value) {
+                      roomTypes[index].name = value;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Room Type Name',
+                      labelStyle: TextStyle(
+                        color: darkGreen,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: darkGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: TextEditingController(
+                        text: roomTypes[index].price.toString()),
+                    onChanged: (value) {
+                      roomTypes[index].price = double.tryParse(value) ?? 0.0;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Price/night',
+                      labelStyle: TextStyle(
+                        color: darkGreen,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: darkGreen),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: TextEditingController(
+                        text: roomTypes[index].pax.toString()),
+                    onChanged: (value) {
+                      roomTypes[index].pax = int.tryParse(value) ?? 0;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Pax',
+                      labelStyle: TextStyle(
+                        color: darkGreen,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: darkGreen),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller:
+                        TextEditingController(text: roomTypes[index].bed),
+                    onChanged: (value) {
+                      roomTypes[index].bed = value;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Bed',
+                      labelStyle: TextStyle(
+                        color: darkGreen,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: darkGreen),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: TextEditingController(
+                        text: roomTypes[index].quantity.toString()),
+                    onChanged: (value) {
+                      roomTypes[index].quantity = int.tryParse(value) ?? 0;
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Quantity',
+                      labelStyle: TextStyle(
+                        color: darkGreen,
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: darkGreen),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: 150,
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _saveRoomType(
+                            roomTypes[index].name,
+                            roomTypes[index].price.toString(),
+                            roomTypes[index].pax.toString(),
+                            roomTypes[index].bed,
+                            roomTypes[index].quantity.toString(),
+                          );
+                          setState(() {
+                            roomTypes.removeAt(index);
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: darkGreen,
+                        ),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+
+        // Add a button to add a new room type
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            35,
+            0,
+            35,
+            8,
+          ),
+          child: ElevatedButton(
+            onPressed: () {
+              addRoomType();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: darkGreen),
+            child: const Text(
+              'Add a new room type',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        //uploadimages
+        const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 35,
+            vertical: 10,
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Divider(
+                  thickness: 0.5,
+                  color: darkGreen,
+                ),
+              ),
+              //middle text
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10.0,
+                ),
+                child: Text(
+                  "Upload your photo",
+                  style: TextStyle(
+                    color: darkGreen,
+                    fontFamily: 'Lexend',
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Divider(
+                  thickness: 0.5,
+                  color: darkGreen,
+                ),
+              )
+            ],
+          ),
+        ),
+
+        IconButton(
+          onPressed: widget.pickAndUploadImages,
+          icon: const Icon(Icons.camera_alt),
+          iconSize: 36,
+        ),
+
+        Padding(
+          padding: const EdgeInsets.fromLTRB(35, 0, 35, 10),
+          child: Text(
+            "Your images will appear here",
+            style: TextStyle(
+              color: Colors.grey.withOpacity(0.9),
+              fontStyle: FontStyle.italic,
+              fontFamily: 'Lexend',
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.fromLTRB(
+            0,
+            0,
+            0,
+            10,
+          ),
+          child: SizedBox(
+            height: 150,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: List.generate(
+                widget.imageUrls.length,
+                (index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AspectRatio(
+                      aspectRatio: 1.0,
+                      child: Image.network(
+                        widget.imageUrls[index],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+
+        //save button
+        CustomButton(
+          onPressed: () async {
+            String listingName = _listingNameController.text;
+            String address = _addressController.text;
+            String description = _descriptionController.text;
+
+            if (listingName.isNotEmpty &&
+                address.isNotEmpty &&
+                description.isNotEmpty) {
+              // Save accommodation information to Firestore
+              await firestoreService.addAccommodation(
+                uid: widget.userId,
+                listingName: listingName,
+                accommodationType: accommodationTypeValue,
+                amenities: amenitiesSelected,
+                address: address,
+                description: description,
+                roomType: savedRoomTypes,
+                photos: widget.imageUrls,
+              );
+
+              // Clear text fields
+              _listingNameController.clear();
+              _addressController.clear();
+              _descriptionController.clear();
+
+              // Check if the widget is mounted before calling setState
+              if (mounted) {
+                // Navigate to the homepage
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              }
+            } else {
+              // Show an error message or handle empty fields appropriately
+            }
+          },
+          text: "Add Accommodation",
+        ),
+
+        const SizedBox(height: 100),
       ],
     );
   }

@@ -95,7 +95,6 @@ class FirestoreService {
   Future<void> addAccommodation({
     required String uid,
     required String listingName,
-    required String listingType,
     required String accommodationType,
     required List<String> amenities,
     required String address,
