@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
-import 'package:kitajomvendor/components/pricepoint_dropdown.dart';
 import 'package:kitajomvendor/firestore.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mylongtextfield.dart';
-import 'package:kitajomvendor/components/activity_type_dropdown.dart';
 import 'package:kitajomvendor/components/accommodation_type_dropdown.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
 

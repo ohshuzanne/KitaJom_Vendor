@@ -128,4 +128,22 @@ class FirestoreService {
       },
     );
   }
+
+  // READ restaurant listings
+  Future<List<QueryDocumentSnapshot>> getRestaurantListings() async {
+    QuerySnapshot querySnapshot = await restaurantListings.get();
+    return querySnapshot.docs;
+  }
+
+  // READ activity listings
+  Future<List<QueryDocumentSnapshot>> getActivityListings() async {
+    QuerySnapshot querySnapshot = await activityListings.get();
+    return querySnapshot.docs;
+  }
+
+  // READ accommodation listings
+  Future<List<QueryDocumentSnapshot>> getAccommodationListings() async {
+    QuerySnapshot querySnapshot = await accommodationListings.get();
+    return querySnapshot.docs;
+  }
 }
