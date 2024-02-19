@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kitajomvendor/utils/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyButton extends StatelessWidget {
   final Function()? onTap;
@@ -57,7 +59,7 @@ class CustomButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            primary: darkGreen,
+            backgroundColor: darkGreen,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),

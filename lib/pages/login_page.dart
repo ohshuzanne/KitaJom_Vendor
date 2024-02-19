@@ -7,44 +7,46 @@ import 'package:kitajomvendor/pages/forgot_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
-  const LoginPage({super.key, required this.onTap});
+  const LoginPage({Key? key, required this.onTap}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //creating the controllers to save/use what the users are
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); // Add a GlobalKey
 
-  //sign user in method
   void signUserIn() async {
-    //show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(color: darkGreen),
-        );
-      },
-    );
+    _showLoadingDialog(); // Show loading dialog
 
-    //try sign in
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.pop(context);
+      Navigator.pop(context); // Pop the loading dialog
     } on FirebaseAuthException catch (e) {
-      //pop the loading circle
-      Navigator.pop(context);
+      Navigator.pop(context); // Pop the loading dialog
       showErrorMessage(e.code);
     }
   }
 
-  //wrong credentials message
+  void _showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible:
+          false, // Prevent dialog from being dismissed by tapping outside
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(color: darkGreen),
+        );
+      },
+    );
+  }
+
   void showErrorMessage(String message) {
     showDialog(
       context: context,
@@ -73,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
       body: SafeArea(

@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kitajomvendor/pages/add_listing_page2.dart';
 
 class FirestoreService {
   final CollectionReference restaurantListings =
       FirebaseFirestore.instance.collection('restaurant');
+  final CollectionReference activityListings =
+      FirebaseFirestore.instance.collection('activity');
 
   //CREATE new restaurant listings
   Future<void> addRestaurant({
@@ -30,6 +33,49 @@ class FirestoreService {
         'updatedAt': Timestamp.now(),
         'isAvailable': true,
         'listingType': "restaurant",
+      },
+    );
+  }
+
+  //CREATE new activity listings
+  Future<void> addActivity({
+    required String uid,
+    required String listingName,
+    required String activityType,
+    required List<String> activities,
+    required String address,
+    required String ageRestrictions,
+    required String duration,
+    required String description,
+    required String openingHours,
+    required String pricePoint,
+    required List<Ticket> ticketPrice,
+    required List<String> photos,
+  }) {
+    return activityListings.add(
+      {
+        'vendorId': uid,
+        'listingName': listingName,
+        'activityType': activityType,
+        'listingType': "activity",
+        'activities': activities,
+        'address': address,
+        'ageRestrictions': ageRestrictions,
+        'duration': duration,
+        'description': description,
+        'openingHours': openingHours,
+        'pricePoint': pricePoint,
+        'rating': 0,
+        'ticketPrice': ticketPrice
+            .map((ticketPrice) => {
+                  'name': ticketPrice.name,
+                  'price': ticketPrice.price,
+                })
+            .toList(),
+        'photos': photos,
+        'createdAt': Timestamp.now(),
+        'updatedAt': Timestamp.now(),
+        'isAvailable': true,
       },
     );
   }
