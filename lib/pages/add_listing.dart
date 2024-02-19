@@ -132,7 +132,7 @@ class _AddListingPageState extends State<AddListingPage> {
                 //third radio button
                 RadioListTile<String>(
                   title: Text(
-                    "Accomodation",
+                    "Accommodation",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.grey[800],

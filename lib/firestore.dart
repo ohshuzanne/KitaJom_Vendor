@@ -1,11 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kitajomvendor/pages/add_listing_page2.dart';
+import 'package:kitajomvendor/pages/add_activity_listing.dart';
+import 'package:kitajomvendor/pages/add_restaurant_listing.dart';
+import 'package:kitajomvendor/pages/add_accommodation_listing.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:kitajomvendor/pages/add_listing_page2.dart';
+import 'package:kitajomvendor/pages/add_activity_listing.dart';
+import 'package:kitajomvendor/pages/add_restaurant_listing.dart';
+import 'package:kitajomvendor/pages/add_accommodation_listing.dart';
 
 class FirestoreService {
   final CollectionReference restaurantListings =
       FirebaseFirestore.instance.collection('restaurant');
   final CollectionReference activityListings =
       FirebaseFirestore.instance.collection('activity');
+  final CollectionReference accommodationListings =
+      FirebaseFirestore.instance.collection('accommodation');
 
   //CREATE new restaurant listings
   Future<void> addRestaurant({
@@ -70,6 +81,45 @@ class FirestoreService {
             .map((ticketPrice) => {
                   'name': ticketPrice.name,
                   'price': ticketPrice.price,
+                })
+            .toList(),
+        'photos': photos,
+        'createdAt': Timestamp.now(),
+        'updatedAt': Timestamp.now(),
+        'isAvailable': true,
+      },
+    );
+  }
+
+//CREATE new accommodation listings
+  Future<void> addAccommodation({
+    required String uid,
+    required String listingName,
+    required String listingType,
+    required String accommodationType,
+    required List<String> amenities,
+    required String address,
+    required String description,
+    required List<RoomTypes> roomType,
+    required List<String> photos,
+  }) {
+    return accommodationListings.add(
+      {
+        'vendorId': uid,
+        'listingName': listingName,
+        'listingType': 'accommodation',
+        'accommodationType': accommodationType,
+        'amenities': amenities,
+        'address': address,
+        'description': description,
+        'rating': 0,
+        'roomTypes': roomType
+            .map((roomType) => {
+                  'name': roomType.name,
+                  'price': roomType.price,
+                  'pax': roomType.pax,
+                  'bed': roomType.bed,
+                  'quantity': roomType.quantity,
                 })
             .toList(),
         'photos': photos,
