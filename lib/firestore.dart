@@ -9,14 +9,56 @@ import 'package:kitajomvendor/pages/add_listing_page2.dart';
 import 'package:kitajomvendor/pages/add_activity_listing.dart';
 import 'package:kitajomvendor/pages/add_restaurant_listing.dart';
 import 'package:kitajomvendor/pages/add_accommodation_listing.dart';
+import 'package:rxdart/rxdart.dart';
 
 class FirestoreService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   final CollectionReference restaurantListings =
       FirebaseFirestore.instance.collection('restaurant');
   final CollectionReference activityListings =
       FirebaseFirestore.instance.collection('activity');
   final CollectionReference accommodationListings =
       FirebaseFirestore.instance.collection('accommodation');
+
+  Stream<List<Map<String, dynamic>>> getUserListings(String userId) {
+    // Create streams for each collection
+    final restaurantStream = restaurantListings
+        .where('vendorId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList());
+
+    final activityStream = activityListings
+        .where('vendorId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList());
+
+    final accommodationStream = accommodationListings
+        .where('vendorId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => doc.data() as Map<String, dynamic>)
+            .toList());
+
+    // Merge the streams into a single stream
+    return Rx.combineLatest3(
+      restaurantStream,
+      activityStream,
+      accommodationStream,
+      (restaurantListings, activityListings, accommodationListings) {
+        // Combine the listings from all streams into one list
+        List<Map<String, dynamic>> allListings = [];
+        allListings.addAll(restaurantListings);
+        allListings.addAll(activityListings);
+        allListings.addAll(accommodationListings);
+        return allListings;
+      },
+    );
+  }
 
   //CREATE new restaurant listings
   Future<void> addRestaurant({
@@ -145,5 +187,20 @@ class FirestoreService {
   Future<List<QueryDocumentSnapshot>> getAccommodationListings() async {
     QuerySnapshot querySnapshot = await accommodationListings.get();
     return querySnapshot.docs;
+  }
+
+  // DELETE restaurant listing
+  Future<void> deleteRestaurant(String listingId) async {
+    await restaurantListings.doc(listingId).delete();
+  }
+
+  // DELETE activity listing
+  Future<void> deleteActivity(String listingId) async {
+    await activityListings.doc(listingId).delete();
+  }
+
+  // DELETE accommodation listing
+  Future<void> deleteAccommodation(String listingId) async {
+    await accommodationListings.doc(listingId).delete();
   }
 }

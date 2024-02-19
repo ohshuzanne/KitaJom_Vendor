@@ -152,7 +152,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
                             tileColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               side: BorderSide(
-                                width: 2,
+                                width: 1,
                                 color: darkGreen,
                               ),
                               borderRadius: BorderRadius.circular(25),
@@ -175,7 +175,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
                                             return Icon(
                                               Icons.error_outline,
                                               color: Colors.red,
-                                            );
+                                            ); // Display an error icon if image loading fails
                                           },
                                         )
                                       : Icon(
@@ -213,7 +213,6 @@ class _MyListingsPageState extends State<MyListingsPage> {
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
-                            trailing: Icon(Icons.more_vert),
                           ),
                         );
                       },

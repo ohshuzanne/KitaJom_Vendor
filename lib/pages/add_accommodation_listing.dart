@@ -746,23 +746,3 @@ class _AccommodationListingFieldsState
     );
   }
 }
-
-
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         //illustration
-//         Center(
-//           child: Container(
-//             width: 250,
-//             height: 250,
-//             decoration: BoxDecoration(
-//               color: Colors.white,
-//               borderRadius: BorderRadius.circular(10),
-//             ),
-//             child: Image.asset('lib/images/57.png'),
-//           ),
-//         ),
