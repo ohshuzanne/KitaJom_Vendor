@@ -1,19 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kitajomvendor/pages/add_listing_page2.dart';
 import 'package:kitajomvendor/pages/add_activity_listing.dart';
-import 'package:kitajomvendor/pages/add_restaurant_listing.dart';
 import 'package:kitajomvendor/pages/add_accommodation_listing.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kitajomvendor/pages/add_listing_page2.dart';
-import 'package:kitajomvendor/pages/add_activity_listing.dart';
-import 'package:kitajomvendor/pages/add_restaurant_listing.dart';
-import 'package:kitajomvendor/pages/add_accommodation_listing.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:uuid/uuid.dart';
 
 class FirestoreService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
   final CollectionReference restaurantListings =
       FirebaseFirestore.instance.collection('restaurant');
   final CollectionReference activityListings =
@@ -21,44 +11,8 @@ class FirestoreService {
   final CollectionReference accommodationListings =
       FirebaseFirestore.instance.collection('accommodation');
 
-  Stream<List<Map<String, dynamic>>> getUserListings(String userId) {
-    // Create streams for each collection
-    final restaurantStream = restaurantListings
-        .where('vendorId', isEqualTo: userId)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList());
-
-    final activityStream = activityListings
-        .where('vendorId', isEqualTo: userId)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList());
-
-    final accommodationStream = accommodationListings
-        .where('vendorId', isEqualTo: userId)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList());
-
-    // Merge the streams into a single stream
-    return Rx.combineLatest3(
-      restaurantStream,
-      activityStream,
-      accommodationStream,
-      (restaurantListings, activityListings, accommodationListings) {
-        // Combine the listings from all streams into one list
-        List<Map<String, dynamic>> allListings = [];
-        allListings.addAll(restaurantListings);
-        allListings.addAll(activityListings);
-        allListings.addAll(accommodationListings);
-        return allListings;
-      },
-    );
-  }
+//Generating a uuid
+  final uuid = Uuid();
 
   //CREATE new restaurant listings
   Future<void> addRestaurant({
@@ -71,7 +25,8 @@ class FirestoreService {
     required String pricePoint,
     required List<String> photos,
   }) {
-    return restaurantListings.add(
+    String newUuid = uuid.v4();
+    return restaurantListings.doc(newUuid).set(
       {
         'vendorId': uid,
         'listingName': listingName,
@@ -81,11 +36,13 @@ class FirestoreService {
         'openingHours': openingHours,
         'pricePoint': pricePoint,
         'rating': 0,
+        'userReviews': [],
         'photos': photos,
         'createdAt': Timestamp.now(),
         'updatedAt': Timestamp.now(),
         'isAvailable': true,
         'listingType': "restaurant",
+        'listingId': newUuid,
       },
     );
   }
@@ -104,8 +61,9 @@ class FirestoreService {
     required String pricePoint,
     required List<Ticket> ticketPrice,
     required List<String> photos,
-  }) {
-    return activityListings.add(
+  }) async {
+    String newUuid = uuid.v4();
+    await activityListings.doc(newUuid).set(
       {
         'vendorId': uid,
         'listingName': listingName,
@@ -119,6 +77,7 @@ class FirestoreService {
         'openingHours': openingHours,
         'pricePoint': pricePoint,
         'rating': 0,
+        'userReviews': [],
         'ticketPrice': ticketPrice
             .map((ticketPrice) => {
                   'name': ticketPrice.name,
@@ -129,6 +88,7 @@ class FirestoreService {
         'createdAt': Timestamp.now(),
         'updatedAt': Timestamp.now(),
         'isAvailable': true,
+        'listingId': newUuid,
       },
     );
   }
@@ -143,8 +103,9 @@ class FirestoreService {
     required String description,
     required List<RoomTypes> roomType,
     required List<String> photos,
-  }) {
-    return accommodationListings.add(
+  }) async {
+    String newUuid = uuid.v4();
+    await accommodationListings.doc(newUuid).set(
       {
         'vendorId': uid,
         'listingName': listingName,
@@ -154,6 +115,7 @@ class FirestoreService {
         'address': address,
         'description': description,
         'rating': 0,
+        'userReviews': [],
         'roomTypes': roomType
             .map((roomType) => {
                   'name': roomType.name,
@@ -167,6 +129,7 @@ class FirestoreService {
         'createdAt': Timestamp.now(),
         'updatedAt': Timestamp.now(),
         'isAvailable': true,
+        'listingId': newUuid,
       },
     );
   }

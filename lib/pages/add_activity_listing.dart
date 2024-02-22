@@ -7,6 +7,7 @@ import 'package:kitajomvendor/firestore.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/activity_type_dropdown.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
+import 'package:kitajomvendor/components/mylongtextfield.dart';
 
 class ActivityListingFields extends StatefulWidget {
   final VoidCallback pickAndUploadImages;
@@ -350,10 +351,9 @@ class _ActivityListingFieldsState extends State<ActivityListingFields> {
             ],
           ),
         ),
-        MyTextField(
+        MyLongTextField(
           controller: _addressController,
           hintText: "eg. Jalan Gambang",
-          obscureText: false,
         ),
 
         //age restriction field
@@ -434,10 +434,9 @@ class _ActivityListingFieldsState extends State<ActivityListingFields> {
             ],
           ),
         ),
-        MyTextField(
+        MyLongTextField(
           controller: _descriptionController,
           hintText: "e.g. An amazing atmosphere...",
-          obscureText: false,
         ),
 
         //openingHours field

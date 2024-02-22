@@ -4,6 +4,7 @@ import 'package:kitajomvendor/utils/colors.dart';
 import 'package:kitajomvendor/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kitajomvendor/pages/listing_details_page.dart';
 
 class MyListingsPage extends StatefulWidget {
   const MyListingsPage({Key? key});
@@ -146,25 +147,36 @@ class _MyListingsPageState extends State<MyListingsPage> {
                       itemBuilder: (context, index) {
                         //read images
 
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            tileColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                color: darkGreen,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListingDetails(
+                                  userId: user.uid,
+                                  listingId: listings[index][
+                                      'listingId'], // Using Firestore auto-generated document ID
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(20.0),
-                              child: Container(
-                                height: 100.0,
-                                width: 100.0,
-                                color: Colors.white,
-                                child: AspectRatio(
-                                  aspectRatio: 1.0,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              tileColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  width: 1,
+                                  color: Colors.grey.shade400,
+                                ),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(20.0),
+                                child: Container(
+                                  height: 100.0,
+                                  width: 100.0,
+                                  color: Colors.white,
                                   child: listings[index]['photos'] != null &&
                                           listings[index]['photos'].isNotEmpty
                                       ? Image.network(
@@ -184,33 +196,35 @@ class _MyListingsPageState extends State<MyListingsPage> {
                                         ),
                                 ),
                               ),
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    listings[index]['listingName'] ??
-                                        "Unavailable",
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      listings[index]['listingName'] ??
+                                          "Unavailable",
+                                      style: TextStyle(
+                                        fontFamily: 'Lexend',
+                                        fontWeight: FontWeight.w600,
+                                      )),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    listings[index]['address'] ?? "Unavailable",
                                     style: TextStyle(
                                       fontFamily: 'Lexend',
-                                      fontWeight: FontWeight.w600,
-                                    )),
-                                const SizedBox(width: 10),
-                                Text(
-                                  listings[index]['address'] ?? "Unavailable",
-                                  style: TextStyle(
-                                    fontFamily: 'Lexend',
-                                    color: darkGreen,
+                                      color: darkGreen,
+                                    ),
                                   ),
+                                ],
+                              ),
+                              subtitle: Text(
+                                listings[index]['description'] ??
+                                    "Description unavailable",
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'Lexend',
+                                  fontStyle: FontStyle.italic,
                                 ),
-                              ],
-                            ),
-                            subtitle: Text(
-                              listings[index]['description'] ??
-                                  "Description unavailable",
-                              style: TextStyle(
-                                fontFamily: 'Lexend',
-                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ),

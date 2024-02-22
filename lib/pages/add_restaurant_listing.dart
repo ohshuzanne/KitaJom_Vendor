@@ -5,6 +5,7 @@ import 'package:kitajomvendor/components/pricepoint_dropdown.dart';
 import 'package:kitajomvendor/firestore.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
+import 'package:kitajomvendor/components/mylongtextfield.dart';
 
 class RestaurantListingFields extends StatefulWidget {
   final VoidCallback pickAndUploadImages;
@@ -104,10 +105,9 @@ class _RestaurantListingFieldsState extends State<RestaurantListingFields> {
             ],
           ),
         ),
-        MyTextField(
+        MyLongTextField(
           controller: _addressController,
           hintText: "eg. No.3, Jalan Putra 3, Lorong 3, 333333 KL",
-          obscureText: false,
         ),
 
         //section for cuisine tags
@@ -283,10 +283,9 @@ class _RestaurantListingFieldsState extends State<RestaurantListingFields> {
             ],
           ),
         ),
-        MyTextField(
+        MyLongTextField(
           controller: _descriptionController,
           hintText: "e.g. An amazing atmosphere...",
-          obscureText: false,
         ),
 
         //openingHours field
