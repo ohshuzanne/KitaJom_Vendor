@@ -6,6 +6,9 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:intl/intl.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
+import 'package:kitajomvendor/pages/update_restaurant_listing_page.dart';
+import 'package:kitajomvendor/pages/update_activity_listing_page.dart';
+import 'package:kitajomvendor/pages/update_accommodation_listing_page.dart';
 
 class ListingDetails extends StatefulWidget {
   final String userId;
@@ -54,20 +57,103 @@ class _ListingDetailsState extends State<ListingDetails> {
     FirebaseAuth.instance.signOut();
   }
 
+  void updateListing() {
+    // Check if the listing ID belongs to the restaurant collection
+    FirebaseFirestore.instance
+        .collection('restaurant')
+        .doc(widget.listingId)
+        .get()
+        .then((restaurantSnapshot) {
+      if (restaurantSnapshot.exists) {
+        // Navigate to UpdateRestaurantListingPage
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UpdateRestaurantListingPage(
+              userId: widget.userId,
+              listingId: widget.listingId,
+            ),
+          ),
+        );
+      } else {
+        // Check if the listing ID belongs to the activity collection
+        FirebaseFirestore.instance
+            .collection('activity')
+            .doc(widget.listingId)
+            .get()
+            .then((activitySnapshot) {
+          if (activitySnapshot.exists) {
+            // Navigate to UpdateActivityListingPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UpdateActivityListingPage(
+                  userId: widget.userId,
+                  listingId: widget.listingId,
+                ),
+              ),
+            );
+          } else {
+            // Assume the listing ID belongs to the accommodation collection
+            // Navigate to UpdateAccommodationListingPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => UpdateAccommodationListingPage(
+                  userId: widget.userId,
+                  listingId: widget.listingId,
+                ),
+              ),
+            );
+          }
+        });
+      }
+    });
+  }
+
   void deletelisting() async {
     bool confirm = await showDialog(
       context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.grey.shade800.withOpacity(0.8),
       builder: (context) => AlertDialog(
-        title: Text("Delete Listing Confirmation"),
-        content: Text("Are you sure you want to delete this listing?"),
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Delete Listing?",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          ],
+        ),
+        content: Text(
+            "Are you sure you want to delete this listing? Any deleted information is unretrievable."),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text("No"),
+            child: Text(
+              "No",
+              style: TextStyle(
+                color: darkGreen,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text("Yes"),
+            child: Text(
+              "Yes",
+              style: TextStyle(
+                color: darkGreen,
+              ),
+            ),
           ),
         ],
       ),
@@ -123,6 +209,7 @@ class _ListingDetailsState extends State<ListingDetails> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(
           color: darkGreen,
         ),
@@ -150,64 +237,67 @@ class _ListingDetailsState extends State<ListingDetails> {
             const SizedBox(height: 7),
 
             //photos
-            Padding(
-              padding: const EdgeInsets.only(
-                  bottom: 18.0), // Remove horizontal padding
-              child: SizedBox(
-                height: 250,
-                width: double.infinity, // Ensure PageView takes full width
-                child: Stack(
-                  children: [
-                    PageView.builder(
-                      controller: _pageController,
-                      itemCount:
-                          (listingData?['photos'] as List<dynamic>?)?.length ??
-                              0,
-                      itemBuilder: (context, index) {
-                        final photoUrl = listingData?['photos'][index];
-                        return GestureDetector(
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => Dialog(
-                                child: Image.network(
-                                  photoUrl,
-                                  fit: BoxFit.contain,
+            Visibility(
+              visible: listingData?['photos'] != null,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 18.0), // Remove horizontal padding
+                child: SizedBox(
+                  height: 250,
+                  width: double.infinity, // Ensure PageView takes full width
+                  child: Stack(
+                    children: [
+                      PageView.builder(
+                        controller: _pageController,
+                        itemCount: (listingData?['photos'] as List<dynamic>?)
+                                ?.length ??
+                            0,
+                        itemBuilder: (context, index) {
+                          final photoUrl = listingData?['photos'][index];
+                          return GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  child: Image.network(
+                                    photoUrl,
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
+                              );
+                            },
+                            child: Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      ),
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Center(
+                            child: SmoothPageIndicator(
+                              controller: _pageController,
+                              count: (listingData?['photos'] as List<dynamic>?)
+                                      ?.length ??
+                                  0,
+                              effect: ExpandingDotsEffect(
+                                spacing: 6,
+                                dotWidth: 8,
+                                dotHeight: 8,
+                                dotColor: Colors.white,
+                                activeDotColor: mediumGreen,
                               ),
-                            );
-                          },
-                          child: Image.network(
-                            photoUrl,
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      },
-                    ),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0.0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Center(
-                          child: SmoothPageIndicator(
-                            controller: _pageController,
-                            count: (listingData?['photos'] as List<dynamic>?)
-                                    ?.length ??
-                                0,
-                            effect: ExpandingDotsEffect(
-                              spacing: 6,
-                              dotWidth: 8,
-                              dotHeight: 8,
-                              dotColor: Colors.white,
-                              activeDotColor: mediumGreen,
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -400,6 +490,170 @@ class _ListingDetailsState extends State<ListingDetails> {
               ),
             ),
 
+            //activityType
+            Visibility(
+              visible: listingData?['activityType'] != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  0,
+                  25,
+                  6,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.local_activity_rounded,
+                    ),
+                    SizedBox(
+                        width:
+                            10), // Add some space between the icon and the text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height:
+                                  5), // Add some vertical space between the title and the address
+                          Text(
+                            "${(listingData?['activityType'] ?? 'Loading').substring(0, 1).toUpperCase()}${(listingData?['activityType'] ?? 'Loading').substring(1)}",
+                            style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //accommodationType
+            Visibility(
+              visible: listingData?['accommodationType'] != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  0,
+                  25,
+                  6,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.house_rounded,
+                    ),
+                    SizedBox(
+                        width:
+                            10), // Add some space between the icon and the text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height:
+                                  5), // Add some vertical space between the title and the address
+                          Text(
+                            "${(listingData?['accommodationType'] ?? 'Loading').substring(0, 1).toUpperCase()}${(listingData?['accommodationType'] ?? 'Loading').substring(1)}",
+                            style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //ageRestrictions
+            Visibility(
+              visible: listingData?['ageRestrictions'] != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  0,
+                  25,
+                  6,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.people,
+                    ),
+                    SizedBox(
+                        width:
+                            10), // Add some space between the icon and the text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height:
+                                  5), // Add some vertical space between the title and the address
+                          Text(
+                            "${(listingData?['ageRestrictions'] ?? 'Loading').substring(0, 1).toUpperCase()}${(listingData?['ageRestrictions'] ?? 'Loading').substring(1)}",
+                            style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            //duration
+            Visibility(
+              visible: listingData?['duration'] != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  0,
+                  25,
+                  6,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.hourglass_bottom_rounded,
+                    ),
+                    SizedBox(
+                        width:
+                            10), // Add some space between the icon and the text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height:
+                                  5), // Add some vertical space between the title and the address
+                          Text(
+                            "${(listingData?['duration'] ?? 'Loading').substring(0, 1).toUpperCase()}${(listingData?['duration'] ?? 'Loading').substring(1)}",
+                            style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 15),
 
             Padding(
@@ -417,7 +671,7 @@ class _ListingDetailsState extends State<ListingDetails> {
                   25,
                   15,
                   25,
-                  0,
+                  20,
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -468,8 +722,322 @@ class _ListingDetailsState extends State<ListingDetails> {
               ),
             ),
 
-            const SizedBox(height: 15),
+            //activity tags
+            Visibility(
+              visible: listingData?['activities'] != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  15,
+                  25,
+                  20,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        0,
+                        0,
+                        15,
+                      ),
+                      child: Text("Activity Tags",
+                          style: TextStyle(
+                            fontFamily: 'Lexend',
+                            fontWeight: FontWeight.bold,
+                            color: darkGreen,
+                          )),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Wrap(
+                                spacing: 5.0,
+                                runSpacing: 0.0,
+                                children: (listingData?['activities']
+                                            as List<dynamic>?)
+                                        ?.map<Widget>((activities) {
+                                      return Chip(
+                                        label: Text(
+                                          activities.toString(),
+                                          style: TextStyle(
+                                            fontFamily: 'Lexend',
+                                            fontSize: 14,
+                                            color: Colors.grey[00],
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              25,
+                                            ),
+                                            side: BorderSide(
+                                              color: Colors.grey.shade400,
+                                            )),
+                                      );
+                                    }).toList() ??
+                                    [],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
+            //amenities tag
+            Visibility(
+              visible: listingData?['amenities'] != null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  15,
+                  25,
+                  20,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        0,
+                        0,
+                        15,
+                      ),
+                      child: Text("Amenities",
+                          style: TextStyle(
+                            fontFamily: 'Lexend',
+                            fontWeight: FontWeight.bold,
+                            color: darkGreen,
+                          )),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Wrap(
+                                spacing: 5.0,
+                                runSpacing: 0.0,
+                                children: (listingData?['amenities']
+                                            as List<dynamic>?)
+                                        ?.map<Widget>((amenities) {
+                                      return Chip(
+                                        label: Text(
+                                          amenities.toString(),
+                                          style: TextStyle(
+                                            fontFamily: 'Lexend',
+                                            fontSize: 14,
+                                            color: Colors.grey[00],
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.transparent,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              25,
+                                            ),
+                                            side: BorderSide(
+                                              color: Colors.grey.shade400,
+                                            )),
+                                      );
+                                    }).toList() ??
+                                    [],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Tickets
+            Visibility(
+              visible: listingData?['ticketPrice'] != null &&
+                  listingData?['ticketPrice'] is List<dynamic>,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  15,
+                  25,
+                  25,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        0,
+                        0,
+                        15,
+                      ),
+                      child: Text(
+                        "Tickets",
+                        style: TextStyle(
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.bold,
+                          color: darkGreen,
+                        ),
+                      ),
+                    ),
+                    // Iterate over each ticket element
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: (listingData?['ticketPrice'] as List<dynamic>?)
+                              ?.map<Widget>((ticket) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Row(
+                                children: [
+                                  // Display ticket name
+                                  Expanded(
+                                    child: Text(
+                                      ticket['name'] ?? '',
+                                      style: TextStyle(
+                                        fontFamily: 'Lexend',
+                                        fontSize: 14,
+                                        color: Colors.grey[00],
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ),
+                                  // Display ticket price
+                                  Text(
+                                    'RM${ticket['price'] ?? ''}',
+                                    style: TextStyle(
+                                      fontFamily: 'Lexend',
+                                      fontSize: 14,
+                                      color: Colors.grey[00],
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Room Types
+            Visibility(
+              visible: listingData?['roomTypes'] != null &&
+                  listingData?['roomTypes'] is List<dynamic>,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  25,
+                  15,
+                  25,
+                  20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        0,
+                        0,
+                        15,
+                      ),
+                      child: Text(
+                        "Room Types/Whole House",
+                        style: TextStyle(
+                          fontFamily: 'Lexend',
+                          fontWeight: FontWeight.bold,
+                          color: darkGreen,
+                        ),
+                      ),
+                    ),
+                    // Iterate over each room type
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: (listingData?['roomTypes'] as List<dynamic>?)
+                              ?.map<Widget>((roomType) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Display room type name (underline and semi-bold)
+                                  Text(
+                                    roomType['name'] ?? '',
+                                    style: TextStyle(
+                                      fontFamily: 'Lexend',
+                                      fontSize: 14,
+                                      color: Colors.grey[00],
+                                      fontWeight: FontWeight.w600,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  // Display price
+                                  Text(
+                                    'Price: RM${roomType['price'] ?? ''}',
+                                    style: TextStyle(
+                                      fontFamily: 'Lexend',
+                                      fontSize: 14,
+                                      color: Colors.grey[00],
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  // Display pax
+                                  Text(
+                                    'Pax: ${roomType['pax'] ?? ''}',
+                                    style: TextStyle(
+                                      fontFamily: 'Lexend',
+                                      fontSize: 14,
+                                      color: Colors.grey[00],
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  // Display bed
+                                  Text(
+                                    'Bed: ${roomType['bed'] ?? ''}',
+                                    style: TextStyle(
+                                      fontFamily: 'Lexend',
+                                      fontSize: 14,
+                                      color: Colors.grey[00],
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                  // Display quantity
+                                  Text(
+                                    'Quantity: ${roomType['quantity'] ?? ''}',
+                                    style: TextStyle(
+                                      fontFamily: 'Lexend',
+                                      fontSize: 14,
+                                      color: Colors.grey[00],
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList() ??
+                          [],
+                    ),
+                  ],
+                ),
+              ),
+            ),
             DefaultTextStyle(
               style: TextStyle(
                   fontSize: 12,
@@ -491,8 +1059,37 @@ class _ListingDetailsState extends State<ListingDetails> {
 
             const SizedBox(height: 20),
 
-            //Delete Listing
-            MyButton(onTap: deletelisting, buttonText: 'Delete Listing'),
+            // Update & delete Listing
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 25,
+              ),
+              child: Row(
+                children: [
+                  //Update listing
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: MyButton(
+                        onTap: updateListing,
+                        buttonText: 'Update Listing',
+                      ),
+                    ),
+                  ),
+
+                  //Delete Lising
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: MyButton(
+                        onTap: deletelisting,
+                        buttonText: 'Delete Listing',
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 50),
           ],

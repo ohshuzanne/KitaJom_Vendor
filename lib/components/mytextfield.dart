@@ -67,3 +67,56 @@ class _MyTextFieldState extends State<MyTextField> {
     );
   }
 }
+
+class MyUpdateTextField extends StatefulWidget {
+  final TextEditingController controller;
+
+  const MyUpdateTextField({
+    Key? key,
+    required this.controller,
+  }) : super(key: key);
+
+  @override
+  _MyUpdateTextFieldState createState() => _MyUpdateTextFieldState();
+}
+
+class _MyUpdateTextFieldState extends State<MyUpdateTextField> {
+  bool _isFilled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SizedBox(
+        height: 50,
+        child: TextFormField(
+          controller: widget.controller,
+          onChanged: (value) {
+            setState(() {
+              _isFilled = value.isNotEmpty;
+            });
+          },
+          decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: darkGreen),
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            fillColor: Colors.grey[200],
+            filled: true,
+            labelStyle: TextStyle(
+              color: darkGreen.withOpacity(0.5),
+              fontSize: 14,
+              fontFamily: 'Lexend',
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
