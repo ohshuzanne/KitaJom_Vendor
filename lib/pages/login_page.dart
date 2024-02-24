@@ -155,9 +155,14 @@ class _LoginPageState extends State<LoginPage> {
 
             //sign in button
 
-            MyButton(
-              onTap: signUserIn,
-              buttonText: "Sign In",
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 30,
+              ),
+              child: MyButton(
+                onTap: signUserIn,
+                buttonText: "Sign In",
+              ),
             ),
 
             const SizedBox(height: 25),

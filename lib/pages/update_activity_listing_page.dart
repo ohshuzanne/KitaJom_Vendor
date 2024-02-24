@@ -7,12 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:intl/intl.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
 import 'package:kitajomvendor/components/pricepoint_dropdown.dart';
 import 'package:kitajomvendor/components/activity_type_dropdown.dart';
 import 'dart:io';
+import 'package:kitajomvendor/pages/auth_page.dart';
 
 class UpdateActivityListingPage extends StatefulWidget {
   final String userId;
@@ -33,7 +33,7 @@ class _UpdateActivityListingPageState extends State<UpdateActivityListingPage> {
   Map<String, dynamic>? listingData;
   Map<String, dynamic>? updatedListingData;
   List<Map<String, dynamic>> ticketPrices = [];
-  bool isAddingTicket = false; // Flag to track if adding ticket mode is active
+  bool isAddingTicket = false;
   final user = FirebaseAuth.instance.currentUser!;
   final PageController _pageController = PageController();
   final TextEditingController _listingNameController = TextEditingController();
@@ -346,6 +346,9 @@ class _UpdateActivityListingPageState extends State<UpdateActivityListingPage> {
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const AuthPage(),
+    ));
   }
 
   @override
@@ -774,6 +777,7 @@ class _UpdateActivityListingPageState extends State<UpdateActivityListingPage> {
             ),
           ),
 
+          //tickets
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -794,7 +798,7 @@ class _UpdateActivityListingPageState extends State<UpdateActivityListingPage> {
                       final ticket = updatedListingData?['ticketPrice'][index];
                       return ListTile(
                         title: Text(ticket['name']),
-                        subtitle: Text('\$${ticket['price']}'),
+                        subtitle: Text('RM${ticket['price']}'),
                         trailing: IconButton(
                           icon: Icon(Icons.delete),
                           onPressed: () {

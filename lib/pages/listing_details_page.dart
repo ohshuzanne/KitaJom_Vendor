@@ -9,6 +9,8 @@ import 'package:kitajomvendor/pages/home_page.dart';
 import 'package:kitajomvendor/pages/update_restaurant_listing_page.dart';
 import 'package:kitajomvendor/pages/update_activity_listing_page.dart';
 import 'package:kitajomvendor/pages/update_accommodation_listing_page.dart';
+import 'package:kitajomvendor/pages/view_review_page.dart';
+import 'package:kitajomvendor/pages/auth_page.dart';
 
 class ListingDetails extends StatefulWidget {
   final String userId;
@@ -33,6 +35,80 @@ class _ListingDetailsState extends State<ListingDetails> {
     fetchListingData();
   }
 
+  void showAlertDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Make dialog non-dismissible
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white, // Set background color to white
+          title: Text(
+            "Alert",
+            style:
+                TextStyle(color: darkGreen), // darkGreen text color for title
+          ),
+          content: Text(
+            message,
+            style:
+                TextStyle(color: darkGreen), // darkGreen text color for content
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text(
+                "OK",
+                style: TextStyle(
+                    color: darkGreen), // darkGreen text color for button text
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void navigateToUserReviews() async {
+    final firestore = FirebaseFirestore.instance;
+    String collectionName = '';
+
+    final restaurantSnapshot =
+        await firestore.collection('restaurant').doc(widget.listingId).get();
+    if (restaurantSnapshot.exists) {
+      collectionName = 'restaurant';
+    } else {
+      final accommodationSnapshot = await firestore
+          .collection('accommodation')
+          .doc(widget.listingId)
+          .get();
+      if (accommodationSnapshot.exists) {
+        collectionName = 'accommodation';
+      } else {
+        final activitySnapshot =
+            await firestore.collection('activity').doc(widget.listingId).get();
+        if (activitySnapshot.exists) {
+          collectionName = 'activity';
+        }
+      }
+    }
+
+    if (collectionName.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserReviewsPage(
+            userId: user.uid,
+            listingId: widget.listingId,
+            collectionName: collectionName,
+          ),
+        ),
+      );
+    } else {
+      showAlertDialog(context, "No collection found");
+    }
+  }
+
   Future<void> fetchListingData() async {
     final firestore = FirebaseFirestore.instance;
     final restaurantSnapshot =
@@ -55,6 +131,9 @@ class _ListingDetailsState extends State<ListingDetails> {
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const AuthPage(),
+    ));
   }
 
   void updateListing() {
@@ -188,24 +267,26 @@ class _ListingDetailsState extends State<ListingDetails> {
     }
   }
 
-  Widget starRating(int rating) {
+  Widget starRating(double rating) {
     List<Widget> stars = [];
-    for (int i = 0; i < 5; i++) {
-      IconData iconData = rating > 1 ? Icons.start : Icons.star_rounded;
-      Color color = rating > i ? Colors.yellow : Colors.grey;
-      stars.add(
-        Icon(
-          iconData,
-          color: color,
-          size: 25,
-        ),
-      );
+    for (int i = 1; i <= 5; i++) {
+      Icon icon;
+      if (i <= rating) {
+        icon = Icon(Icons.star, color: Colors.yellow.shade700, size: 25);
+      } else if (i - rating < 1) {
+        // This will add a half star if the rating is not a whole number
+        icon = Icon(Icons.star_half, color: Colors.yellow.shade700, size: 25);
+      } else {
+        icon = Icon(Icons.star_border, color: Colors.grey, size: 25);
+      }
+      stars.add(icon);
     }
-    return Row(children: stars);
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: stars);
   }
 
   @override
   Widget build(BuildContext context) {
+    double rating = (listingData?['rating'] ?? 0).toDouble();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -309,34 +390,35 @@ class _ListingDetailsState extends State<ListingDetails> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  starRating(
-                    listingData?['rating'] ?? 0,
-                  ),
+                  starRating(rating),
                 ],
               ),
             ),
 
             //userReviews
-            const Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Check user reviews ",
-                    style: TextStyle(
-                      fontFamily: 'Lexend',
-                      fontSize: 12,
+            Center(
+              child: GestureDetector(
+                onTap: navigateToUserReviews,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Check user reviews ",
+                      style: TextStyle(
+                        fontFamily: 'Lexend',
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "here",
-                    style: TextStyle(
-                      fontFamily: 'Lexend',
-                      fontSize: 12,
-                      decoration: TextDecoration.underline,
+                    Text(
+                      "here",
+                      style: TextStyle(
+                        fontFamily: 'Lexend',
+                        fontSize: 12,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 

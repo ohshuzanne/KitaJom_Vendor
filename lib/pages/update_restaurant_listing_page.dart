@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
 import 'package:kitajomvendor/components/pricepoint_dropdown.dart';
+import 'package:kitajomvendor/pages/auth_page.dart';
 import 'dart:io';
 
 class UpdateRestaurantListingPage extends StatefulWidget {
@@ -335,6 +336,9 @@ class _UpdateRestaurantListingPageState
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const AuthPage(),
+    ));
   }
 
   @override
