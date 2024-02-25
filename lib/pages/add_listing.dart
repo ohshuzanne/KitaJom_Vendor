@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kitajomvendor/utils/colors.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:kitajomvendor/pages/profile_page.dart';
-import 'package:kitajomvendor/pages/booking_page.dart';
-import 'package:kitajomvendor/pages/listing_page.dart';
-import 'package:kitajomvendor/pages/chat_page.dart';
-import 'package:kitajomvendor/pages/homepage_content.dart';
 import 'package:kitajomvendor/pages/add_listing_page2.dart';
 
 class AddListingPage extends StatefulWidget {
@@ -32,7 +25,7 @@ class _AddListingPageState extends State<AddListingPage> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(
           color: darkGreen,
         ),

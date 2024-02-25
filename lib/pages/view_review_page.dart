@@ -81,27 +81,29 @@ class _UserReviewsPageState extends State<UserReviewsPage> {
   }
 
   void _toggleReplyField(String reviewId) {
-    if (_replyControllers.containsKey(reviewId)) {
-      // If the reply field is already active, remove it
-      _replyControllers.remove(reviewId);
-    } else {
-      // If the vendorReply is empty, allow the vendor to reply
-      String vendorReply = _userReviews!.firstWhere(
-          (review) => review['reviewId'] == reviewId)['vendorReply'];
-      if (vendorReply.isEmpty) {
-        _replyControllers[reviewId] =
-            TextEditingController(); // Initialize TextEditingController for this review
+    setState(() {
+      if (_replyControllers.containsKey(reviewId)) {
+        // If the reply field is already active, remove it
+        _replyControllers.remove(reviewId);
       } else {
-        // If vendorReply is not empty, show Snackbar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Reply already exists'),
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.red,
-          ),
-        );
+        // If the vendorReply is empty, allow the vendor to reply
+        String vendorReply = _userReviews!.firstWhere(
+            (review) => review['reviewId'] == reviewId)['vendorReply'];
+        if (vendorReply.isEmpty) {
+          _replyControllers[reviewId] =
+              TextEditingController(); // Initialize TextEditingController for this review
+        } else {
+          // If vendorReply is not empty, show Snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Reply already exists'),
+              duration: Duration(seconds: 2),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
-    }
+    });
   }
 
   Future<void> _submitReply(

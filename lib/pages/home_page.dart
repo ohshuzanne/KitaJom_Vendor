@@ -6,7 +6,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:kitajomvendor/pages/profile_page.dart';
 import 'package:kitajomvendor/pages/booking_page.dart';
 import 'package:kitajomvendor/pages/listing_page.dart';
-import 'package:kitajomvendor/pages/chat_page.dart';
+import 'package:kitajomvendor/pages/auth_page.dart';
 import 'package:kitajomvendor/pages/homepage_content.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,12 +20,13 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   String firstName = "";
   final user = FirebaseAuth.instance.currentUser!;
+  String? userPhotoUrl;
 
   final List<Widget> _pages = [
     HomePageContent(),
     MyListingsPage(),
     BookingsPage(),
-    ChatPage(),
+    ProfilePage(),
   ];
 
   @override
@@ -35,17 +36,31 @@ class _HomePageState extends State<HomePage> {
   }
 
   void getUsername() async {
-    DocumentSnapshot snap = await FirebaseFirestore.instance
-        .collection('user')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
-    setState(() {
-      firstName = (snap.data() as Map<String, dynamic>)['firstName'];
-    });
+    try {
+      DocumentSnapshot snap = await FirebaseFirestore.instance
+          .collection('user')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      if (snap.exists) {
+        Map<String, dynamic> userData = snap.data() as Map<String, dynamic>;
+        setState(() {
+          firstName = userData['firstName'];
+          // Update the user photo URL
+          userPhotoUrl = userData['photoUrl'];
+        });
+      } else {}
+    } catch (error) {
+      // Handle any errors that occur during fetching
+      print("Error fetching user data: $error");
+    }
   }
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const AuthPage(),
+    ));
   }
 
   @override
@@ -53,9 +68,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: Icon(
-          Icons.menu,
-          color: darkGreen,
+        leading: IconButton(
+          icon: Icon(Icons.logout, color: darkGreen),
+          onPressed: signUserOut, // Move the sign-out function here
         ),
         iconTheme: IconThemeData(
           color: darkGreen,
@@ -71,10 +86,22 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: signUserOut,
-            icon: Icon(Icons.logout),
-          )
+          // Add a Circular Avatar to the top right
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              10,
+              6,
+              8,
+              0,
+            ),
+            child: CircleAvatar(
+              // Placeholder for user image, adjust as needed
+              backgroundImage: NetworkImage(
+                  userPhotoUrl ?? 'https://example.com/default_avatar.png'),
+              backgroundColor: lightGreen,
+            ),
+          ),
+          SizedBox(width: 10), // For some spacing
         ],
       ),
       body: _pages[_selectedIndex],
@@ -114,8 +141,8 @@ class _HomePageState extends State<HomePage> {
                     text: "Bookings",
                   ),
                   GButton(
-                    icon: Icons.chat,
-                    text: "Chat",
+                    icon: Icons.person,
+                    text: "Profile",
                   ),
                 ],
               ),
