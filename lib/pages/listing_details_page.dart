@@ -11,6 +11,7 @@ import 'package:kitajomvendor/pages/update_activity_listing_page.dart';
 import 'package:kitajomvendor/pages/update_accommodation_listing_page.dart';
 import 'package:kitajomvendor/pages/view_review_page.dart';
 import 'package:kitajomvendor/pages/auth_page.dart';
+import 'package:kitajomvendor/utils/map_utils.dart';
 
 class ListingDetails extends StatefulWidget {
   final String userId;
@@ -465,31 +466,37 @@ class _ListingDetailsState extends State<ListingDetails> {
                 25,
                 6,
               ),
-              child: Row(
-                children: [
-                  Icon(Icons.place_rounded),
-                  SizedBox(
-                      width:
-                          10), // Add some space between the icon and the text
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                            height:
-                                5), // Add some vertical space between the title and the address
-                        Text(
-                          "${listingData?['address'] ?? 'Loading'}",
-                          style: TextStyle(
-                            fontFamily: 'Lexend',
-                            fontSize: 14,
-                            color: Colors.grey[600],
+              child: GestureDetector(
+                onTap: () {
+                  MapUtils.openMap(listingData?['address'] ?? '');
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.place_rounded),
+                    SizedBox(
+                        width:
+                            10), // Add some space between the icon and the text
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                              height:
+                                  5), // Add some vertical space between the title and the address
+                          Text(
+                            "${listingData?['address'] ?? 'Loading'}",
+                            style: TextStyle(
+                              fontFamily: 'Lexend',
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 
