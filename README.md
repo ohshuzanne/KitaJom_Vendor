@@ -21,6 +21,13 @@ KitaJom (Vendor) is a mobile application designed to provide local vendors, incl
 - View, reply to, and delete replies to user reviews.
 - View photos attached to reviews and check user profiles.
 
+## Screenshots
+![firstpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/firstpage.png?raw=true)
+![secondpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/secondpage.png?raw=true)
+![thirdpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/thirdpage.png?raw=true)
+![fourthpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/fourthpage.png?raw=true)
+![fiftpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/fifthpage.png?raw=true)
+
 ## Dependencies used
 - cupertino_icons (v.1.0.2)
 - hexcolor (v.3.0.1)
@@ -37,13 +44,6 @@ KitaJom (Vendor) is a mobile application designed to provide local vendors, incl
 - intl (v.0.19.0)
 - url_launcher (v.6.2.5)
 - flutter_launcher_icons (v.0.13.1)
-
-## Screenshots
-![firstpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/firstpage.png?raw=true)
-![secondpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/secondpage.png?raw=true)
-![thirdpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/thirdpage.png?raw=true)
-![fourthpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/fourthpage.png?raw=true)
-![fiftpage](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/fifthpage.png?raw=true)
-
+  
 ## License
 - MIT License
