@@ -117,14 +117,12 @@ class _RegisterPageState extends State<RegisterPage> {
     if (!validateFields()) {
       return;
     }
-
     // Check if the username is taken
     bool usernameTaken = await isUsernameTaken(usernameController.text);
     if (usernameTaken) {
       showErrorMessage("Username is already taken. Please choose another one.");
       return;
     }
-
     showDialog(
       context: context,
       builder: (context) {
@@ -133,7 +131,6 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       },
     );
-
     try {
       if (passwordController.text == confirmPasswordController.text) {
         // Create user with Firebase Authentication
@@ -142,7 +139,6 @@ class _RegisterPageState extends State<RegisterPage> {
           email: emailController.text,
           password: passwordController.text,
         );
-
         // Get the UID from the UserCredential
         String uid = userCredential.user!.uid;
 
