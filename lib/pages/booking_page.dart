@@ -43,56 +43,56 @@ class _BookingsPageState extends State<BookingsPage> {
     String dialogContent =
         "Confirmation Number:\n$confirmationNumber\n\nUsername:\n$username";
 
-    // Show a dialog with the confirmation number and the username
-    showDialog(
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Booking Details",
-              style: TextStyle(
-                fontFamily: 'Lexend',
-                fontSize: 17,
-                color: darkGreen,
-              )),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Wrap(
             children: [
-              SelectableText(
-                dialogContent,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontFamily: 'Lexend',
+              ListTile(
+                title: Text(
+                  "Booking Details",
+                  style: TextStyle(
+                    fontFamily: 'Lexend',
+                    fontSize: 17,
+                    color: darkGreen,
+                  ),
+                ),
+                subtitle: SelectableText(
+                  dialogContent,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontFamily: 'Lexend',
+                  ),
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
                     icon: Icon(Icons.copy),
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: dialogContent));
+                      Navigator.of(context).pop(); // Close the bottom sheet
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Copied to clipboard')),
                       );
                     },
                   ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      "Close",
+                      style: TextStyle(
+                        color: darkGreen,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ],
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                "Close",
-                style: TextStyle(
-                  color: darkGreen,
-                ),
-              ),
-            ),
-          ],
         );
       },
     );
