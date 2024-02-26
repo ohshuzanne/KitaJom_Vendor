@@ -179,7 +179,6 @@ class _UserReviewsPageState extends State<UserReviewsPage> {
       if (i <= rating) {
         icon = Icon(Icons.star, color: Colors.yellow.shade700, size: 25);
       } else if (i - rating < 1 && i > rating) {
-        // This will add a half star if the rating is not a whole number and is less than the next whole number
         icon = Icon(Icons.star_half, color: Colors.yellow.shade700, size: 25);
       } else {
         icon = Icon(Icons.star_border, color: Colors.grey, size: 25);

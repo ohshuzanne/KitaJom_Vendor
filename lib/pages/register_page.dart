@@ -8,7 +8,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/components/pickimage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:kitajomvendor/components/add_data.dart';
+import 'package:kitajomvendor/models/add_data.dart';
+import 'package:kitajomvendor/components/mylongtextfield.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -49,9 +50,81 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  //sign user up method
+  Future<bool> isUsernameTaken(String username) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .where('username', isEqualTo: username)
+        .limit(1)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
+  }
+
+  bool validateFields() {
+    // Check if any of the fields are empty
+    if (emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty ||
+        firstNameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        phoneNumberController.text.isEmpty ||
+        usernameController.text.isEmpty ||
+        addressController.text.isEmpty ||
+        businessNameController.text.isEmpty ||
+        registrationNumberController.text.isEmpty) {
+      // Show dialog box with error message
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: darkGreen,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            title: Center(
+              child: Text(
+                "All fields are required",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog box
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+      return false; // Fields are not valid
+    }
+    return true; // All fields are valid
+  }
+
   Future<void> signUserUp() async {
-    // Show loading circle
+    if (!validateFields()) {
+      return;
+    }
+
+    // Check if the username is taken
+    bool usernameTaken = await isUsernameTaken(usernameController.text);
+    if (usernameTaken) {
+      showErrorMessage("Username is already taken. Please choose another one.");
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (context) {
@@ -119,12 +192,22 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(
-      () {
-        _image = img;
-      },
-    );
+    try {
+      final ImagePicker _picker = ImagePicker();
+      final XFile? pickedFile =
+          await _picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        Uint8List img = await pickedFile.readAsBytes();
+        setState(() {
+          _image = img;
+        });
+      } else {
+        print("No image selected.");
+      }
+    } catch (e) {
+      print("Failed to pick image: $e");
+    }
   }
 
   void saveProfile(String uid) async {
@@ -190,6 +273,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 30),
 
             //username textfield
+            Text(
+              "E-mail",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: emailController,
               hintText: "E-mail",
@@ -199,6 +290,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 20),
 
             //password textfield
+            Text(
+              "Password",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: passwordController,
               hintText: "Password",
@@ -208,6 +307,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 20),
 
             //confirm password textfield
+            Text(
+              "Confirm Password",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: confirmPasswordController,
               hintText: "Confirm your password",
@@ -217,6 +324,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 20),
 
             //username TextField
+            Text(
+              "Username",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: usernameController,
               hintText: "Username",
@@ -226,6 +341,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 25),
 
             //firstName TextField
+            Text(
+              "First Name",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: firstNameController,
               hintText: "First Name",
@@ -235,6 +358,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 25),
 
             //lastName TextField
+            Text(
+              "Last Name",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: lastNameController,
               hintText: "Last Name",
@@ -244,6 +375,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 25),
 
             //phone TextField
+            Text(
+              "Phone",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: phoneNumberController,
               hintText: "Phone Number",
@@ -254,15 +393,27 @@ class _RegisterPageState extends State<RegisterPage> {
 
             //ADDRESS TextField
             //CHANGE THIS
-            MyTextField(
-              controller: addressController,
-              hintText: "Address",
-              obscureText: false,
+            Text(
+              "Address",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
             ),
+            MyLongTextField(controller: addressController, hintText: "Address"),
 
             const SizedBox(height: 25),
 
             //Business Name
+            Text(
+              "Business Name",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: businessNameController,
               hintText: "Business Name",
@@ -272,6 +423,14 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 25),
 
             //registration number
+            Text(
+              "Registration Number",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: registrationNumberController,
               hintText: "Registration Number",

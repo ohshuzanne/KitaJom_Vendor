@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
-import 'package:kitajomvendor/firestore.dart';
+import 'package:kitajomvendor/controller/firestore.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mylongtextfield.dart';
 import 'package:kitajomvendor/components/accommodation_type_dropdown.dart';
@@ -734,9 +734,7 @@ class _AccommodationListingFieldsState
                   MaterialPageRoute(builder: (context) => HomePage()),
                 );
               }
-            } else {
-              // Show an error message or handle empty fields appropriately
-            }
+            } else {}
           },
           text: "Add Accommodation",
         ),

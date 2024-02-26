@@ -35,7 +35,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Call method to fetch user details and set controllers
     fetchUserDetails();
   }
 

@@ -13,7 +13,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String? userPhotoUrl; // Initialize as an empty string
+  String? userPhotoUrl;
   String? email;
   String? firstName;
   String? lastName;
@@ -71,11 +71,8 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             Container(
-              width: MediaQuery.of(context)
-                  .size
-                  .width, // This ensures it spans the full width
-              height: MediaQuery.of(context).size.height *
-                  0.3, // Adjust the height as needed, here it's 30% of the screen height
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.3,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'package:kitajomvendor/models/booking_detail_class.dart';
 
 class BookingsPage extends StatefulWidget {
   @override
@@ -214,7 +215,7 @@ class _BookingsPageState extends State<BookingsPage> {
     );
 
     if (selectedFilter != null) {
-      _selectedFilter = selectedFilter; // Update the selected filter globally
+      _selectedFilter = selectedFilter;
 
       // Step 2: If 'All' or 'Accommodation' is chosen, allow month selection
       if (selectedFilter != 'Activity') {
@@ -408,28 +409,4 @@ class _BookingsPageState extends State<BookingsPage> {
       ),
     );
   }
-}
-
-class BookingDetail {
-  final String listingName;
-  final dynamic totalAmount;
-  final String listingType;
-  final String checkIn;
-  final String checkOut;
-  final String night;
-  final List<dynamic> ticketType;
-  final String confirmationNumber;
-  final String userId;
-
-  BookingDetail({
-    required this.listingName,
-    required this.totalAmount,
-    required this.listingType,
-    required this.checkIn,
-    required this.checkOut,
-    required this.night,
-    required this.ticketType,
-    required this.confirmationNumber,
-    required this.userId,
-  });
 }

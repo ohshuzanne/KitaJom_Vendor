@@ -48,7 +48,6 @@ class _UpdateRestaurantListingPageState
   }
 
   void deleteImage(int index) {
-    // Remove the image URL from the list
     setState(() {
       updatedListingData?['photos'].removeAt(index);
     });
@@ -781,7 +780,7 @@ class _UpdateRestaurantListingPageState
 
           const SizedBox(height: 20),
 
-          // Save Updates and Disable
+          // Save Updates and cancel
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 25,

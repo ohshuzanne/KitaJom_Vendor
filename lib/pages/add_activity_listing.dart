@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
 import 'package:kitajomvendor/components/pricepoint_dropdown.dart';
-import 'package:kitajomvendor/firestore.dart';
+import 'package:kitajomvendor/controller/firestore.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/activity_type_dropdown.dart';
 import 'package:kitajomvendor/pages/home_page.dart';
@@ -767,24 +767,18 @@ class _ActivityListingFieldsState extends State<ActivityListingFields> {
                 ticketPrice: savedTickets,
                 photos: widget.imageUrls,
               );
-
-              // Clear text fields
               _listingNameController.clear();
               _addressController.clear();
               _descriptionController.clear();
               _openingHoursController.clear();
 
-              // Check if the widget is mounted before calling setState
               if (mounted) {
-                // Navigate to the homepage
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
                 );
               }
-            } else {
-              // Show an error message or handle empty fields appropriately
-            }
+            } else {}
           },
           text: "Add Activity",
         ),

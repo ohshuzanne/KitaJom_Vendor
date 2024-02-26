@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:kitajomvendor/pages/add_listing_page2.dart';
+import 'package:kitajomvendor/pages/auth_page.dart';
 
 class AddListingPage extends StatefulWidget {
   const AddListingPage({super.key});
@@ -17,6 +18,9 @@ class _AddListingPageState extends State<AddListingPage> {
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const AuthPage(),
+    ));
   }
 
   @override

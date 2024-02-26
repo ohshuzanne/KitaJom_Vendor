@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kitajomvendor/pages/add_listing.dart';
 import 'package:kitajomvendor/utils/colors.dart';
-import 'package:kitajomvendor/firestore.dart';
+import 'package:kitajomvendor/controller/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/pages/listing_details_page.dart';
@@ -154,8 +154,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
                               MaterialPageRoute(
                                 builder: (context) => ListingDetails(
                                   userId: user.uid,
-                                  listingId: listings[index][
-                                      'listingId'], // Using Firestore auto-generated document ID
+                                  listingId: listings[index]['listingId'],
                                 ),
                               ),
                             );
@@ -187,7 +186,7 @@ class _MyListingsPageState extends State<MyListingsPage> {
                                             return Icon(
                                               Icons.error_outline,
                                               color: Colors.red,
-                                            ); // Display an error icon if image loading fails
+                                            );
                                           },
                                         )
                                       : Icon(

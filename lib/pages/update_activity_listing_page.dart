@@ -390,7 +390,7 @@ class _UpdateActivityListingPageState extends State<UpdateActivityListingPage> {
                   bottom: 18.0), // Remove horizontal padding
               child: SizedBox(
                 height: 250,
-                width: double.infinity, // Ensure PageView takes full width
+                width: double.infinity,
                 child: Stack(
                   children: [
                     PageView.builder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kitajomvendor/components/mybutton.dart';
 import 'package:kitajomvendor/components/mytextfield.dart';
+import 'package:kitajomvendor/pages/home_page.dart';
 import 'package:kitajomvendor/utils/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kitajomvendor/pages/forgot_password_page.dart';
@@ -20,32 +21,23 @@ class _LoginPageState extends State<LoginPage> {
       GlobalKey<ScaffoldState>(); // Add a GlobalKey
 
   void signUserIn() async {
-    _showLoadingDialog(); // Show loading dialog
-
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
+      // If sign-in is successful, navigate to the account page or home page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              HomePage(), // Replace AccountPage with the actual page you want to navigate to
+        ),
+      );
     } on FirebaseAuthException catch (e) {
-      showErrorMessage(e.code);
-    } finally {
-      Navigator.pop(
-          context); // Pop the loading dialog regardless of success or failure
+      // If there is an error signing in, show an error message.
+      showErrorMessage(e.message ?? "An error occurred. Please try again.");
     }
-  }
-
-  void _showLoadingDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible:
-          false, // Prevent dialog from being dismissed by tapping outside
-      builder: (context) {
-        return Center(
-          child: CircularProgressIndicator(color: darkGreen),
-        );
-      },
-    );
   }
 
   void showErrorMessage(String message) {
@@ -57,17 +49,34 @@ class _LoginPageState extends State<LoginPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          title: Center(
-            child: Text(
-              "Incorrect email or password",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w300,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
+          title: Text(
+            "Error",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
             ),
+            textAlign: TextAlign.center,
           ),
+          content: Text(
+            message,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                "OK",
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Dismiss the dialog
+              },
+            ),
+          ],
         );
       },
     );
@@ -113,6 +122,14 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 30),
 
             //username textfield
+            Text(
+              "E-mail",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
             MyTextField(
               controller: emailController,
               hintText: "E-mail",
@@ -122,6 +139,15 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
 
             //password textfield
+            Text(
+              "Password",
+              style: TextStyle(
+                fontSize: 16,
+                fontFamily: 'Lexend',
+                color: darkGreen,
+              ),
+            ),
+
             MyTextField(
               controller: passwordController,
               hintText: "Password",

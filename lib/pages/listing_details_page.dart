@@ -42,7 +42,7 @@ class _ListingDetailsState extends State<ListingDetails> {
       barrierDismissible: false, // Make dialog non-dismissible
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Colors.white, // Set background color to white
+          backgroundColor: Colors.white,
           title: Text(
             "Alert",
             style:
@@ -56,7 +56,7 @@ class _ListingDetailsState extends State<ListingDetails> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: Text(
                 "OK",
