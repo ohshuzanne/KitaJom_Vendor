@@ -1,7 +1,7 @@
 ![KitaJombanner](https://github.com/ohshuzanne/KitaJom_Vendor/blob/main/Screenshots/KitaJombanner.png?raw=true)
 
 # KitaJom for Vendors
-##Empowering Sustainable Travel Businesses in Malaysia
+## Empowering Sustainable Travel Businesses in Malaysia
 KitaJom (Vendor) is a mobile application designed to provide local vendors, including - and especially - small businesses, in the Malaysian sustainable travel industry with the tools and resources they need to thrive. Through user-friendly functionalities, vendors can manage their listings, bookings, and user reviews, all while promoting responsible travel practices within the country. This application is developed in alignment with UNSDGS (SDG 8, 12, and 13). Future planned improvements include the integration of an in-app chat function to communicate better with users.
 
 ## Features
